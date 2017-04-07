@@ -55,20 +55,22 @@ class beam():
         self.length = float(np.linalg.norm(self.start_point - self.end_point))
         self.mode = mode
 
+        self.Force_list = []
+
         self.locked = np.zeros((6))
 
         self.lambdaa = np.zeros((6))
 
         self.K_e = np.matrix([[EA / self.length, 0, 0, -EA / self.length, 0, 0],
-                              [0, 12. * EI / self.length ** 3, 6 * EI / self.length ** 2, 0,
-                               -12. * EI / self.length ** 3, 6 * EI / self.length ** 2],
-                              [0, 6. * EI / self.length ** 3, 4 * EI / self.length ** 2, 0, -6. * EI / self.length ** 3,
-                               2 * EI / self.length],
+                              [0, 12. * EI / self.length ** 3, 6 * EI / self.length ** 2,
+                               0,-12. * EI / self.length ** 3, 6 * EI / self.length ** 2],
+                              [0, 6. * EI / self.length ** 2, 4 * EI / self.length,
+                               0, -6. * EI / self.length ** 2,2 * EI / self.length],
                               [-EA / self.length, 0, 0, EA / self.length, 0, 0],
                               [0, -12. * EI / self.length ** 3, -6 * EI / self.length ** 2, 0,
                                12. * EI / self.length ** 3, -6 * EI / self.length ** 2],
-                              [0, 6 * EI / self.length ** 3, 2 * EI / self.length, 0, -6. * EI / self.length ** 3,
-                               2 * EI / self.length]])
+                              [0, 6 * EI / self.length ** 2, 2 * EI / self.length, 0, -6. * EI / self.length ** 2,
+                               4 * EI / self.length]])
 
         self.Force_e = np.matrix(np.zeros((6, 1)))
         self.Force = np.matrix(np.zeros((6, 1)))
@@ -122,6 +124,8 @@ class beam():
             self.freedom_degree = 6
 
     def add_force(self, num, loc, mode='single'):
+        self.Force_list.append([num,loc,mode])
+
         a = loc
         num  = float(num)
         b = self.length - loc

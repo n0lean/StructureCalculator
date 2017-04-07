@@ -49,7 +49,7 @@ class Myform(QtGui.QMainWindow):
         self.canvas.print_figure('temp1.jpg')
 
         self.MainImg = cv2.imread('temp1.jpg')
-        self.MainImg = cv2.resize(self.MainImg, (640, 410))
+        self.MainImg = cv2.resize(self.MainImg, (310, 280))
         self.QTMainImg1 = np2q(self.MainImg)
         mainmap1 = QtGui.QPixmap.fromImage(self.QTMainImg1)
         self.scene1.addPixmap(mainmap1)
@@ -92,6 +92,7 @@ class Myform(QtGui.QMainWindow):
         self.world.add_beam(temp)
 
         self.commandLine += 'Beam ' + str(ID) + ' added.\n'
+        self.commandLine += str(temp.K_e) +'\n'
         self.ui.textLeftBrowser.setText(self.commandLine)
 
         line, = self.ax2.plot([StartX, EndX], [StartY, EndY], linewidth=5.0)
@@ -105,7 +106,8 @@ class Myform(QtGui.QMainWindow):
 
     def AddForce(self):
         x = int(self.ui.BeamId.text())
-        self.world.beam_list[x].add_force(float(self.ui.ForceEdit.text()), float(self.ui.LocEdit.text()))
+        mode = self.ui.TypeEdit.text()
+        self.world.beam_list[x].add_force(float(self.ui.ForceEdit.text()), float(self.ui.LocEdit.text()),mode)
         self.commandLine += 'Force Added\n'
         self.ui.textLeftBrowser.setText(self.commandLine)
 
@@ -135,12 +137,14 @@ class Myform(QtGui.QMainWindow):
             h1 = 100
         else:
             h1 = -100
-        h2 = int(beam.Force[5, 0] / beam.Force[2, 0] * 100)
+        h2 = int(beam.Force[5, 0] / beam.Force[2, 0] * h1)
+
+
 
         cv2.line(self.img, (60, 200), (60, 200 + h1), (0, 0, 0), 1)
         cv2.line(self.img, (500, 200), (500, 200 + h2), (0, 0, 0), 1)
         cv2.line(self.img, (60, 200 + h1), (500, 200 + h2), (0, 0, 0), 1)
-
+        self.img = cv2.resize(self.img, (280, 320))
         self.QTMainImg1 = np2q(self.img)
         mainmap1 = QtGui.QPixmap.fromImage(self.QTMainImg1)
         self.scene1.addPixmap(mainmap1)
